@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <button onclick="toggleCart()" style="position:absolute; right:20px; top:15px;">
+🛒 Cart
+</button>
+
 <meta charset="UTF-8">
 <title>Idly Express</title>
 
@@ -23,16 +27,49 @@ header {
 
 /* SEARCH */
 .search-box {
-    padding: 15px;
-    text-align: center;
+    padding: 1px;
+    text-align: top left;
     background: white;
 }
 
 .search-box input {
-    width: 80%;
-    padding: 10px;
-    border-radius: 25px;
+    width: 8%;
+    padding: 4px;
+    border-radius: 5px;
     border: 1px solid #ccc;
+}
+
+
+
+/* SEARCH CONTAINER */
+.search-container {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+}
+
+/* ICON */
+.search-icon {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* INPUT (hidden initially) */
+.search-container input {
+    width: 0;
+    padding: 5px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: all 0.4s ease;
+    opacity: 0;
+    margin-left: 5px;
+}
+
+/* WHEN ACTIVE */
+.search-container.active input {
+    width: 160px;
+    opacity: 1;
 }
 
 /* LAYOUT */
@@ -51,48 +88,46 @@ header {
 
 /* CARD */
 .card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     background: white;
-    border-radius: 12px;
-    overflow: hidden;
+    padding: 12px;
+    border-radius: 10px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
 
+/* Image */
 .card img {
-    width: 100%;
-    height: 150px;
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
     object-fit: cover;
 }
 
+/* Content */
 .card-content {
-    padding: 10px;
+    flex: 1;
+    margin-left: 15px;
 }
 
+/* Title */
+.card-content h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+/* Price */
 .price {
+    margin: 5px 0;
     color: #e23744;
     font-weight: bold;
 }
 
+/* Button */
 button {
-    background: #e23744;
-    color: white;
-    border: none;
-    padding: 6px 12px;
+    padding: 8px 12px;
     border-radius: 6px;
-    cursor: pointer;
-}
-
-/* CART */
-.cart {
-    width: 30%;
-    background: white;
-    padding: 15px;
-    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
-}
-
-.cart-item {
-    display: flex;
-    justify-content: space-between;
-    margin: 10px 0;
 }
 
 /* MOBILE */
@@ -107,7 +142,11 @@ button {
 }
 </style>
 </head>
-
+<script>
+function toggleCart() {
+    document.querySelector('.cart').classList.toggle('active');
+}
+</script>
 <body>
 
 <header>
@@ -115,8 +154,9 @@ button {
 </header>
 
 <!-- SEARCH -->
-<div class="search-box">
-<input type="text" id="search" placeholder="Search idly..." onkeyup="searchItems()">
+<div class="search-container">
+    <span class="search-icon" onclick="toggleSearch()">🔍</span>
+    <input type="text" id="search" placeholder="Search idly..." onkeyup="searchItems()">
 </div>
 
 <div class="container">
@@ -225,13 +265,27 @@ function renderCart() {
 }
 
 /* SEARCH */
+function toggleSearch() {
+    let container = document.querySelector(".search-container");
+    container.classList.toggle("active");
+
+    let input = document.getElementById("search");
+    if (container.classList.contains("active")) {
+        input.focus();
+    }
+}
+
 function searchItems() {
     let input = document.getElementById("search").value.toLowerCase();
     let cards = document.querySelectorAll(".card");
 
     cards.forEach(card => {
         let name = card.getAttribute("data-name");
-        card.style.display = name.includes(input) ? "block" : "none";
+        if (name.includes(input)) {
+            card.style.display = "block";
+        } else {
+            card.style.display = "none";
+        }
     });
 }
 </script>
